@@ -1,4 +1,4 @@
-module github.com/ahmetb/serverless-url-shortener
+module github.com/DuckbillGroup/serverless-url-shortener
 
 go 1.14
 
