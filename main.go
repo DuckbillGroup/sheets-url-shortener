@@ -15,6 +15,7 @@ import (
 )
 
 func main() {
+	log.Printf("Starting main")
 	port, addr := os.Getenv("PORT"), os.Getenv("LISTEN_ADDR")
 	if port == "" {
 		port = "8080"
@@ -24,6 +25,7 @@ func main() {
 	sheetName := os.Getenv("SHEET_NAME")
 	homeRedirect := os.Getenv("HOME_REDIRECT")
 	nrLicense := os.Getenv("NR_LICENSE")
+	log.Printf("variables loaded")
 
 	app, nrerr := newrelic.NewApplication(
 		newrelic.ConfigAppName("snark.cloud"),
@@ -31,7 +33,7 @@ func main() {
 		newrelic.ConfigAppLogForwardingEnabled(true),
 	)
 	if nrerr != nil {
-		log.Printf("failed to parse CACHE_TTL as duration: %v", nrerr)
+		log.Printf("failed to configure New Relic: %v", nrerr)
 	}
 
 	ttlVal := os.Getenv("CACHE_TTL")
@@ -43,6 +45,7 @@ func main() {
 		}
 		ttl = v
 	}
+	log.Printf("Starting srv")
 
 	srv := &server{
 		db: &cachedURLMap{
