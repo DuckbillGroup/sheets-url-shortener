@@ -28,6 +28,7 @@ func main() {
 	app, nrerr := newrelic.NewApplication(
 		newrelic.ConfigAppName("snark.cloud"),
 		newrelic.ConfigLicense(nrLicense),
+		newrelic.ConfigAppLogForwardingEnabled(true),
 	)
 	if nrerr != nil {
 		log.Printf("failed to parse CACHE_TTL as duration: %v", nrerr)
