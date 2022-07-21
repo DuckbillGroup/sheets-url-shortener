@@ -17,6 +17,7 @@ func (s *sheetsProvider) Query() ([][]interface{}, error) {
 	if s.googleSheetsID == "" {
 		return nil, fmt.Errorf("GOOGLE_SHEET_ID not set")
 	}
+	log.Printf("Sheets provider set")
 
 	srv, err := sheets.NewService(context.TODO())
 	if err != nil {
