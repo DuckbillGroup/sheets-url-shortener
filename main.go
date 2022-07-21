@@ -10,6 +10,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
 func main() {
@@ -21,6 +23,15 @@ func main() {
 	googleSheetsID := os.Getenv("GOOGLE_SHEET_ID")
 	sheetName := os.Getenv("SHEET_NAME")
 	homeRedirect := os.Getenv("HOME_REDIRECT")
+	nrLicense := os.Getenv("NR_LICENSE")
+
+	app, nrerr := newrelic.NewApplication(
+		newrelic.ConfigAppName("snark.cloud"),
+		newrelic.ConfigLicense(nrLicense),
+	)
+	if nrerr != nil {
+		log.Printf("failed to parse CACHE_TTL as duration: %v", nrerr)
+	}
 
 	ttlVal := os.Getenv("CACHE_TTL")
 	ttl := time.Second * 5
@@ -43,7 +54,7 @@ func main() {
 		homeRedirect: homeRedirect,
 	}
 
-	http.HandleFunc("/", srv.handler)
+	http.HandleFunc(newrelic.WrapHandleFunc(app, "/", srv.handler))
 
 	listenAddr := net.JoinHostPort(addr, port)
 	log.Printf("starting server at %s; ttl=%v", listenAddr, ttl)
