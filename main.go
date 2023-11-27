@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -179,11 +180,11 @@ func prepRedirect(base *url.URL, addPath string, query url.Values) *url.URL {
 	}
 	filteredQuery := url.Values{}
 	for k, v := range query {
-	    if k != "ck_subscriber_id" || len(v) != 1 || !isNumeric(v[0]) {
-		filteredQuery[k] = v
-	    }
+		if k != "ck_subscriber_id" || len(v) != 1 || !isNumeric(v[0]) {
+			filteredQuery[k] = v
+		}
 	}
-    
+
 	base.RawQuery = filteredQuery.Encode()
 	qs := base.Query()
 	for k := range query {
@@ -195,7 +196,7 @@ func prepRedirect(base *url.URL, addPath string, query url.Values) *url.URL {
 func isNumeric(s string) bool {
 	_, err := strconv.Atoi(s)
 	return err == nil
-    }
+}
 func urlMap(in [][]interface{}) URLMap {
 	out := make(URLMap)
 	for _, row := range in {
