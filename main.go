@@ -177,7 +177,14 @@ func prepRedirect(base *url.URL, addPath string, query url.Values) *url.URL {
 		}
 		base.Path += addPath
 	}
-
+	filteredQuery := url.Values{}
+	for k, v := range query {
+	    if k != "ck_subscriber_id" || len(v) != 1 || !isNumeric(v[0]) {
+		filteredQuery[k] = v
+	    }
+	}
+    
+	base.RawQuery = filteredQuery.Encode()
 	qs := base.Query()
 	for k := range query {
 		qs.Add(k, query.Get(k))
@@ -185,7 +192,10 @@ func prepRedirect(base *url.URL, addPath string, query url.Values) *url.URL {
 	base.RawQuery = qs.Encode()
 	return base
 }
-
+func isNumeric(s string) bool {
+	_, err := strconv.Atoi(s)
+	return err == nil
+    }
 func urlMap(in [][]interface{}) URLMap {
 	out := make(URLMap)
 	for _, row := range in {
