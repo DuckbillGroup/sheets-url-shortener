@@ -37,7 +37,7 @@ func main() {
 	}
 
 	ttlVal := os.Getenv("CACHE_TTL")
-	ttl := time.Second * 5
+	ttl := time.Second * 60
 	if ttlVal != "" {
 		v, err := time.ParseDuration(ttlVal)
 		if err != nil {
